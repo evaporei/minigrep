@@ -1,7 +1,11 @@
+#[cfg(test)]
+mod tests;
+
 use std::fs::File;
 use std::io::prelude::*;
 use std::error::Error;
 
+#[derive(Debug, PartialEq)]
 pub struct Config {
     pub query: String,
     pub file_name: String,
