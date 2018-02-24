@@ -1,4 +1,4 @@
-use super::*;
+use super::super::*;
 
 #[test]
 fn config_new_should_return_config() {
@@ -52,3 +52,4 @@ fn run_should_return_error() {
     let config = Config::new(&args).unwrap();
     run(config).unwrap();
 }
+
