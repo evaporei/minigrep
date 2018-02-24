@@ -26,16 +26,32 @@ fn run_should_return_error() {
 }
 
 #[test]
-fn search_should_return_one_result() {
+fn search_should_return_case_sensitive() {
     let query = "duct";
     let contents = "\
 Rust:
 safe, fast, productive.
-Pick three.";
+Pick three.
+Duct tape.";
 
     assert_eq!(
         vec!["safe, fast, productive."],
-        search(query, contents)
+        search_case_sensitive(query, contents)
+    );
+}
+
+#[test]
+fn search_should_return_case_insensitive() {
+    let query = "rUsT";
+    let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.
+Trust me.";
+
+    assert_eq!(
+        vec!["Rust:", "Trust me."],
+        search_case_insensitive(query, contents)
     );
 }
 
@@ -51,6 +67,6 @@ Pick three.";
 
     assert_eq!(
         results,
-        search(query, contents)
+        search_case_insensitive(query, contents)
     );
 }

@@ -4,11 +4,13 @@ mod tests;
 use std::fs::File;
 use std::io::prelude::*;
 use std::error::Error;
+use std::env;
 
 #[derive(Debug, PartialEq)]
 pub struct Config {
     pub query: String,
     pub file_name: String,
+    pub case_sensitive: bool,
 }
 
 impl Config {
@@ -20,11 +22,25 @@ impl Config {
         let query = args[1].clone();
         let file_name = args[2].clone();
 
-        Ok(Config { query, file_name })
+        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+
+        Ok(Config { query, file_name, case_sensitive })
     }
 }
 
-pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    let mut results = Vec::new();
+
+    for line in contents.lines() {
+        if line.to_lowercase().contains(&query.to_lowercase()) {
+            results.push(line);
+        }
+    }
+
+    results
+}
+
+pub fn search_case_sensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let mut results = Vec::new();
 
     for line in contents.lines() {
@@ -42,7 +58,13 @@ pub fn run(config: Config) -> Result<(), Box<Error>> {
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
 
-    for line in search(&config.query, &contents) {
+    let results = if config.case_sensitive {
+        search_case_sensitive(&config.query, &contents)
+    } else {
+        search_case_insensitive(&config.query, &contents)
+    };
+
+    for line in results {
         println!("{}", line);
     }
 

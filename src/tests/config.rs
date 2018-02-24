@@ -1,7 +1,7 @@
 use super::super::*;
 
 #[test]
-fn config_new_should_return_config() {
+fn config_new_should_return_config_when_not_var() {
     let args = vec![
         "program_name".to_string(),
         "bla".to_string(),
@@ -14,6 +14,27 @@ fn config_new_should_return_config() {
     assert_eq!(config, Config {
         query: "bla".to_string(),
         file_name: "my_file.txt".to_string(),
+        case_sensitive: false,
+    });
+}
+
+#[test]
+fn config_new_should_return_config_when_has_var() {
+    let args = vec![
+        "program_name".to_string(),
+        "bla".to_string(),
+        "my_file.txt".to_string(),
+    ];
+
+    let config = Config::new(&args)
+        .expect("to create new instance of Config");
+
+    env::set_var("CASE_INSENSITIVE", "TRUE");
+
+    assert_eq!(config, Config {
+        query: "bla".to_string(),
+        file_name: "my_file.txt".to_string(),
+        case_sensitive: true,
     });
 }
 
@@ -52,4 +73,3 @@ fn run_should_return_error() {
     let config = Config::new(&args).unwrap();
     run(config).unwrap();
 }
-
