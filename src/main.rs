@@ -5,12 +5,12 @@ use std::io::prelude::*;
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    let (query, file_name) = parse_config(&args);
+    let config = parse_config(&args);
 
-    println!("Searching for {}", query);
-    println!("In file {}", file_name);
+    println!("Searching for {}", config.query);
+    println!("In file {}", config.file_name);
 
-    let mut file = File::open(file_name)
+    let mut file = File::open(config.file_name)
         .expect("file not found");
 
     let mut contents = String::new();
@@ -20,9 +20,14 @@ fn main() {
     println!("With text:\n{}", contents);
 }
 
-fn parse_config(args: &[String]) -> (&str, &str) {
-    let query = &args[1];
-    let file_name = &args[2];
+struct Config {
+    query: String,
+    file_name: String,
+}
 
-    (query, file_name)
+fn parse_config(args: &[String]) -> Config {
+    let query = args[1].clone();
+    let file_name = args[2].clone();
+
+    Config { query, file_name }
 }
