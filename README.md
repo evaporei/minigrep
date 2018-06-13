@@ -8,4 +8,4 @@ A Rust version of the unix grep.
 cargo run my_query my_file
 ```
 
-This will use your query to search in the contents of the file passed, if it finds something it will print the line that found the query.
+This will use your query to search in the contents of the file passed, if it finds something it will print the line that found the query...
